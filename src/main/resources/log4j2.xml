@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration packages="com.epam.ta.reportportal.log4j.appender" status="WARN">
+
+    <properties>
+        <property name="pattern">%d{HH:mm:ss.SSS} [%t] %highlight{%-5level} %logger{3} - %msg%n%throwable</property>
+    </properties>
+
+    <Appenders>
+
+        <Console name="ConsoleAppender" target="SYSTEM_OUT">
+            <PatternLayout  pattern="${pattern}"/>
+        </Console>
+
+        <!--<ReportPortalLog4j2Appender name="ReportPortalAppender">
+            <PatternLayout pattern="${pattern}"/>
+        </ReportPortalLog4j2Appender>-->
+
+    </Appenders>
+
+    <Loggers>
+        <Root level="ALL">
+            <!--        <Root level="INFO">-->
+            <AppenderRef ref="ConsoleAppender"/>
+<!--            <AppenderRef ref="ReportPortalAppender"/>-->
+        </Root>
+        <!--<Logger name="com.epam.reportportal.service" level="WARN" additivity="false">
+            <AppenderRef ref="ConsoleAppender"/>
+            <AppenderRef ref="ReportPortalAppender"/>
+        </Logger>
+        <Logger name="com.epam.reportportal.utils" level="WARN" additivity="false">
+            <AppenderRef ref="ConsoleAppender"/>
+            <AppenderRef ref="ReportPortalAppender"/>
+        </Logger>-->
+    </Loggers>
+
+</Configuration>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
