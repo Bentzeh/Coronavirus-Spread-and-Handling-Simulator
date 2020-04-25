@@ -1,5 +1,5 @@
 package com.orens.cshs.logic.state;
 
-public abstract class AbsHealthState {
+public abstract class AbstractHealthState {
     abstract public void move();
 }

@@ -1,55 +1,69 @@
 package com.orens.cshs.models;
 
-import com.orens.cshs.infra.utils.PropertiesFileReader;
+import com.orens.cshs.infra.logger.LoggerHandler;
+import com.orens.cshs.infra.logger.ReportLevel;
 import com.orens.cshs.logic.observer.IInvocable;
+import com.orens.cshs.logic.state.AbstractHealthState;
+import com.orens.cshs.logic.state.HealthyState;
+import com.orens.cshs.pojos.Location;
 
-import java.util.ArrayList;
-import java.util.List;
+public abstract class Participants implements IInvocable {
 
-public class Participants {
+    protected static long globalId = 0L;
+    protected final long id;
+    protected String name;
+    protected final Board board;
+    protected Location location;
+    protected AbstractHealthState currentHealthState;
 
-    private List<IInvocable> simulationParticipants;
+    protected int bodyHeat; //  isSick <- if high than 38 ? true : false ;
+    protected boolean isCarry;
+    protected boolean isDead;
+    protected boolean isInspector;
 
-
-    private Board board;
 
     public Participants(Board board) {
-        this.simulationParticipants = new ArrayList<>();
+        this.id = ++globalId;
+        this.name = "name id: "+id;
+        this.location = new Location().getRandomLocation();
         this.board = board;
-        initPersons();
+
+        this.currentHealthState = new HealthyState();
     }
 
-    private void initPersons() {
-
-        int amountOfHealthyPeople = PropertiesFileReader.getInitialAmountOfHealthyPeople();
-        for (int i = 0; i < amountOfHealthyPeople; ++i) {
-            Person p = new Person(board);
-            simulationParticipants.add(p);
-        }
-
-//        int amountOfCarryingPeople = PropertiesFileReader.getInitialAmountOfCarryingPeople();
-//        for (int i = 0; i < amountOfCarryingPeople; ++i) {
-//            Person p = new Person();
-//            simulationParticipants.add(p);
-//        }
-//
-//        int amountOfSickPeople = PropertiesFileReader.getInitialAmountOfSickPeople();
-//        for (int i = 0; i < amountOfSickPeople; ++i) {
-//            Person p = new Person();
-//            simulationParticipants.add(p);
-//        }
-//
-//        int amountOfInspectors = PropertiesFileReader.getInitialAmountOfInspectors();
-//        for (int i = 0; i < amountOfInspectors; ++i) {
-//            Person p = new Person();
-//            simulationParticipants.add(p);
-//        }
+    @Override
+    public void iteration() {
+        step();
     }
 
-    public void doIteration() {
-        // pass on all of the data collection and do one iteration
-        for (IInvocable invocable: simulationParticipants) {
-            invocable.iteration();
-        }
+
+    private void step(){
+        // move to random spot
+        this.location = location.getRandomLocation();
+        int x = location.getX();
+        int y = location.getY();
+
+        // activate Logic
+        String s =  "I'm in step, with id : " + id + "  ("+x+", "+y+")";
+        LoggerHandler.getInstance().log(ReportLevel.INFO, s);
+        board.setValueAt(x, y, ""+id);
+
     }
+
+    public AbstractHealthState getCurrentHealthState() {
+        return currentHealthState;
+    }
+
+    public void setCurrentHealthState(AbstractHealthState currentHealthState) {
+        this.currentHealthState = currentHealthState;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
 }

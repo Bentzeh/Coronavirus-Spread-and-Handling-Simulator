@@ -1,19 +1,19 @@
 package com.orens.cshs.models;
 
+import com.orens.cshs.infra.utils.PropertiesFileReader;
 import com.orens.cshs.pojos.Pixel;
 
 public class Board {
 
-    private int fieldWidth;
-    private int fieldHeight;
+    private final int fieldWidth;
+    private final int fieldHeight;
     private Pixel[][] field;
 
 
-    public Board(int fieldWidth, int fieldHeight) {
-        this.fieldWidth = fieldWidth;
-        this.fieldHeight = fieldHeight;
+    public Board() {
+        this.fieldWidth = PropertiesFileReader.getBoardWidth();
+        this.fieldHeight = PropertiesFileReader.getBoardHeight();
         initializeBoard();
-
     }
 
     private void initializeBoard() {
