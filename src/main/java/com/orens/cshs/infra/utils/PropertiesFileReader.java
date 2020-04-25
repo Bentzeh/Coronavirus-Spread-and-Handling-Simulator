@@ -37,8 +37,16 @@ public class PropertiesFileReader {
         return Integer.parseInt(properties.getProperty("board.height"));
     }
 
-    public static Integer getBoardLength() {
-        return Integer.parseInt(properties.getProperty("board.length"));
+    public static Integer getBoardWidth() {
+        return Integer.parseInt(properties.getProperty("board.width"));
+    }
+
+    public static Integer getFrameHeight() {
+        return Integer.parseInt(properties.getProperty("frame.height"));
+    }
+
+    public static Integer getFrameWidth() {
+        return Integer.parseInt(properties.getProperty("frame.width"));
     }
 
     public static Long getTickTimeInMilliseconds() {

@@ -18,8 +18,8 @@ public class CSHS{
 
         //timer.schedule(new SimulationController(), 0, tickTimeInMilliseconds);
         //timer.schedule(new SimulationController(), 0, drawTimeInMilliseconds);
-        //tickTimer.scheduleAtFixedRate(simulationController, 0, tickTimeInMilliseconds);
-        tickTimer.scheduleAtFixedRate(simulationController, 0, drawTimeInMilliseconds);
+        tickTimer.scheduleAtFixedRate(simulationController, 0, tickTimeInMilliseconds);
+        //tickTimer.scheduleAtFixedRate(simulationController, 0, drawTimeInMilliseconds);
     }
 
 

@@ -4,25 +4,23 @@ import com.orens.cshs.pojos.Pixel;
 
 public class Board {
 
-    private final Object lock = new Object();
-
-    private int height;
-    private int length;
+    private int fieldWidth;
+    private int fieldHeight;
     private Pixel[][] field;
 
 
-    public Board(int height, int length) {
-        this.height = height;
-        this.length = length;
+    public Board(int fieldWidth, int fieldHeight) {
+        this.fieldWidth = fieldWidth;
+        this.fieldHeight = fieldHeight;
         initializeBoard();
 
     }
 
     private void initializeBoard() {
-        this.field = new Pixel[height][length];
+        this.field = new Pixel[fieldHeight][fieldWidth];
 
         for (int i = 0; i < field.length; ++i) {
-            field[i] = new Pixel[length];
+            field[i] = new Pixel[fieldWidth];
             for (int j = 0; j < field[0].length; ++j) {
                 field[i][j] = new Pixel(j, i);
             }
@@ -35,8 +33,14 @@ public class Board {
 
 
     public Pixel[][] getField() {
-        synchronized (lock){
-            return field;
-        }
+        return field;
+    }
+
+    public int getFieldWidth() {
+        return fieldWidth;
+    }
+
+    public int getFieldHeight() {
+        return fieldHeight;
     }
 }

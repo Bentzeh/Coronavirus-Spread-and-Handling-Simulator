@@ -1,7 +1,7 @@
 package com.orens.cshs.control;
 
-import com.orens.cshs.display.ConsoleDisplay;
-import com.orens.cshs.display.IDisplay;
+import com.orens.cshs.display.AbstractDisplay;
+import com.orens.cshs.display.GridLayoutDisplay;
 import com.orens.cshs.infra.logger.LoggerHandler;
 import com.orens.cshs.infra.logger.ReportLevel;
 import com.orens.cshs.infra.utils.PropertiesFileReader;
@@ -15,7 +15,7 @@ import java.util.TimerTask;
 
 public class SimulationController  extends TimerTask {
     private Board board;
-    private IDisplay display;
+    private AbstractDisplay display;
     private Participants participants;
 
 
@@ -27,17 +27,18 @@ public class SimulationController  extends TimerTask {
 
     private void initBoard() {
         int boardHeight = PropertiesFileReader.getBoardHeight();
-        int boardLength = PropertiesFileReader.getBoardLength();
-        this.board = new Board(boardHeight, boardLength);
+        int boardWidth = PropertiesFileReader.getBoardWidth();
+        board = new Board(boardWidth, boardHeight);
     }
 
     private void initDisplay() {
-        this.display = new ConsoleDisplay(this.board);
+        //display = new ConsoleDisplay(board);
+        display = new GridLayoutDisplay(board);
+        display.InitializeDisplay();
     }
 
     private void initParticipants() {
-        this.participants = new Participants();
-
+        participants = new Participants(board);
     }
 
     @Override public void run() { mainLoop(); }
@@ -46,8 +47,8 @@ public class SimulationController  extends TimerTask {
 
     private void mainLoop(){
         LoggerHandler.getInstance().log(ReportLevel.INFO, "Current time is: " + LocalDateTime.ofInstant(Instant.ofEpochMilli(scheduledExecutionTime()), ZoneId.systemDefault()));
-        display.drawBoard();
-        //participants.doIteration();
+        display.updateDisplayView();
+        participants.doIteration();
     }
 
 

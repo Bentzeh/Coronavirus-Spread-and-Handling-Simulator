@@ -30,7 +30,6 @@ public class Location {
     }
 
     public Location getNextRandomLocation() {
-        // TODO: 24/04/2020 choose location randomly (x+d or x-d or y+d or y-d) and return
         return new Location(x + 2, y);
     }
 }

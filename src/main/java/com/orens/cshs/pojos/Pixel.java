@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Pixel {
-    private final Object lock = new Object();
 
     private Location location;
     private List<Person> personsAtThisPosition;
@@ -27,8 +26,10 @@ public class Pixel {
     }
 
     public void setValue(String newValue) {
-        synchronized (lock){
-            this.val += "(" + newValue + ")";
-        }
+        this.val += "(" + newValue + ")";
+    }
+
+    public String getValue() {
+        return val;
     }
 }

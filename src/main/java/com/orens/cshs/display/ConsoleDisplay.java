@@ -6,18 +6,24 @@ import com.orens.cshs.infra.logger.ReportLevel;
 import com.orens.cshs.models.Board;
 import com.orens.cshs.pojos.Pixel;
 
-public class ConsoleDisplay implements IDisplay {
-    private Board board;
+public class ConsoleDisplay extends AbstractDisplay {
+
     private IReports logger;
+
     public ConsoleDisplay(Board board) {
-        this.logger = LoggerHandler.getInstance();
-        this.board = board;
+        super(board);
     }
 
 
     @Override
-    public void drawBoard(){
+    public void InitializeDisplay() {
+        this.logger = LoggerHandler.getInstance();
+    }
+
+    @Override
+    public void updateDisplayView() {
         Pixel[][] field = board.getField();
+
         StringBuilder fieldAsString = new StringBuilder();
         for (Pixel[] pixels : field) {
             for (int j = 0; j < field[0].length; ++j) {

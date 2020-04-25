@@ -10,9 +10,12 @@ public class Participants {
 
     private List<IInvocable> simulationParticipants;
 
-    public Participants() {
-        this.simulationParticipants = new ArrayList<>();
 
+    private Board board;
+
+    public Participants(Board board) {
+        this.simulationParticipants = new ArrayList<>();
+        this.board = board;
         initPersons();
     }
 
@@ -20,9 +23,8 @@ public class Participants {
 
         int amountOfHealthyPeople = PropertiesFileReader.getInitialAmountOfHealthyPeople();
         for (int i = 0; i < amountOfHealthyPeople; ++i) {
-            Person p = new Person();
+            Person p = new Person(board);
             simulationParticipants.add(p);
-            p.startSimulation();
         }
 
 //        int amountOfCarryingPeople = PropertiesFileReader.getInitialAmountOfCarryingPeople();
@@ -45,7 +47,7 @@ public class Participants {
     }
 
     public void doIteration() {
-        // pass on all of the data collection and and do one iteration
+        // pass on all of the data collection and do one iteration
         for (IInvocable invocable: simulationParticipants) {
             invocable.iteration();
         }
