@@ -10,7 +10,6 @@ import java.util.Random;
 public class RandomGenerator {
 
     private static final Random random = new Random();
-    private static final int AMOUNT_OF_DIRECTIONS = 9;
     private static final int WIDTH = PropertiesFileReader.getBoardWidth();
     private static final int HEIGHT = PropertiesFileReader.getBoardHeight();
 

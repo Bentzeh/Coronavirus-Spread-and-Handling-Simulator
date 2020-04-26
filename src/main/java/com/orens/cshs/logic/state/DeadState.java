@@ -1,16 +1,21 @@
 package com.orens.cshs.logic.state;
 
-public class DeadState{}
-//public class DeadState extends AbstractHealthState {
-//
-//    @Override
-//    public boolean changeState(Participant participant) {
-//        // if () ...
-//        // participant.setCurrentHealthState(new HealthyState());
-//        return true;
-//    }
-//    @Override
-//    public boolean changeState(InspectorPerson inspectorPerson) {
-//        return true;
-//    }
-//}
+import com.orens.cshs.models.InspectorPerson;
+import com.orens.cshs.models.Participant;
+
+public class DeadState extends AbstractHealthState {
+
+    public DeadState() {
+        super(System.currentTimeMillis(), INSPECTOR_SICK_THRESHOLD + 1);
+    }
+
+    @Override
+    public boolean changeState(Participant participant, Participant otherParticipant) {
+        return false;
+    }
+
+    @Override
+    public boolean changeState(InspectorPerson inspectorPerson, Participant otherParticipant) {
+        return false;
+    }
+}

@@ -17,26 +17,57 @@ public class NormalPersonStrategy extends AbstractLogicStrategy {
     @Override
     public void executeLogic(Participant participant) {
 
-        //if (participant.getCurrentHealthState().isMovable()) {
+        //if (participant.getCurrentHealthState().isIsolated()) { if he is isolated
         if (true) {
             // 1. generate random location
             Location newLocation = getNextRandomLocation(participant.getLocation());
 
             // 2. set new location on participant and update board on new location
             board.removeParticipantFromLocation(participant);
-            participant.setLocation(newLocation);
+            if (!participant.getLocation().equals(newLocation)){ //sameSpot
+                participant.setLocation(newLocation);
+            }
             board.addParticipantToLocation(participant);
         }
 
+
+        // if im healthy or inspector otherwise just calculate time
+        // 3. invoke  logic
         Iterator<IInvocable> listOfSimulationParticipantsIterator = participantsData.getSimulationParticipantsIterator();
         boolean isFinish = false;
         while (listOfSimulationParticipantsIterator.hasNext() && !isFinish) {
             Participant otherParticipant = (Participant)listOfSimulationParticipantsIterator.next();
-
+            // check if he is near me
             isFinish = participant.getCurrentHealthState().changeState(participant, otherParticipant);
         }
 
     }
+
+//    public void executeLogic(InspectorPerson participant) {
+//
+//        //if (participant.getCurrentHealthState().isMovable()) { if he is isolated
+//        if (true) {
+//            // 1. generate random location
+//            Location newLocation = getNextRandomLocation(participant.getLocation());
+//
+//            // 2. set new location on participant and update board on new location
+//            board.removeParticipantFromLocation(participant);
+//            if (!participant.getLocation().equals(newLocation)){ //sameSpot
+//                participant.setLocation(newLocation);
+//            }
+//            board.addParticipantToLocation(participant);
+//        }
+//
+//        // 3. invoke  logic
+//        Iterator<IInvocable> listOfSimulationParticipantsIterator = participantsData.getSimulationParticipantsIterator();
+//        boolean isFinish = false;
+//        while (listOfSimulationParticipantsIterator.hasNext() && !isFinish) {
+//            Participant otherParticipant = (Participant)listOfSimulationParticipantsIterator.next();
+//            // check if he is near me
+//            isFinish = participant.getCurrentHealthState().changeState(participant, otherParticipant);
+//        }
+//
+//    }
 
 
 }

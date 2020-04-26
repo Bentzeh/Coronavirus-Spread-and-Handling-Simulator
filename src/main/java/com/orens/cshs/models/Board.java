@@ -6,22 +6,19 @@ import com.orens.cshs.models.pojos.Pixel;
 
 public class Board {
 
-    private final int fieldWidth;
-    private final int fieldHeight;
+    private static final int FIELD_WIDTH  = PropertiesFileReader.getBoardWidth();
+    private static final int FIELD_HEIGHT = PropertiesFileReader.getBoardHeight();
     private Pixel[][] field;
 
-
     public Board() {
-        this.fieldWidth = PropertiesFileReader.getBoardWidth();
-        this.fieldHeight = PropertiesFileReader.getBoardHeight();
         initializeBoard();
     }
 
     private void initializeBoard() {
-        this.field = new Pixel[fieldHeight][fieldWidth];
+        this.field = new Pixel[FIELD_HEIGHT][FIELD_WIDTH];
 
         for (int i = 0; i < field.length; ++i) {
-            field[i] = new Pixel[fieldWidth];
+            field[i] = new Pixel[FIELD_WIDTH];
             for (int j = 0; j < field[0].length; ++j) {
                 field[i][j] = new Pixel(j, i);
             }
@@ -33,11 +30,11 @@ public class Board {
     }
 
     public int getFieldWidth() {
-        return fieldWidth;
+        return FIELD_WIDTH;
     }
 
     public int getFieldHeight() {
-        return fieldHeight;
+        return FIELD_HEIGHT;
     }
 
     public boolean addParticipantToLocation(Participant participant) {

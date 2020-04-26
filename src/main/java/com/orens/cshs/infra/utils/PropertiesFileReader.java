@@ -81,8 +81,16 @@ public class PropertiesFileReader {
         return Integer.parseInt(properties.getProperty("persons.amount.inspectors"));
     }
 
+    public static Integer getSickTemperatureThreshold() {
+        return Integer.parseInt(properties.getProperty("persons.sick.temperature.threshold"));
+    }
+
+
     public static Integer getContagiousRadius() {
         return Integer.parseInt(properties.getProperty("contagious.radius"));
+    }
+    public static Long getContagiousTimeInMilliseconds() {
+        return Long.parseLong(properties.getProperty("contagious.time"));
     }
 
 

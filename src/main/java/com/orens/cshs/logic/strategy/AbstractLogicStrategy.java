@@ -26,68 +26,55 @@ public abstract class AbstractLogicStrategy {
     }
 
     public Location getNextRandomLocation(Location location) {
-        int x = location.getX();
         int y = location.getY();
+        int x = location.getX();
 
         Direction randomDirection = RandomGenerator.getRandomDirection();
         int stepDistanceLimit = PropertiesFileReader.getStepDistance();
-        int width = PropertiesFileReader.getBoardWidth();
-        int height = PropertiesFileReader.getBoardHeight();
 
-
-        int checkedX = 0;
-        int checkedY = 0;
+        int Y = 0;
+        int X = 0;
 
         switch (randomDirection) {
             case Left:
-                checkedX = checkWithinLimits(x - stepDistanceLimit, width);
-                checkedY = checkWithinLimits(y, height);
+                Y = y;
+                X = x - stepDistanceLimit;
                 break;
             case LeftUp:
-                checkedX = checkWithinLimits(x - stepDistanceLimit, width);
-                checkedY = checkWithinLimits(y - stepDistanceLimit, height);
+                Y = y - stepDistanceLimit;
+                X = x - stepDistanceLimit;
                 break;
             case Up:
-                checkedX = checkWithinLimits(x, width);
-                checkedY = checkWithinLimits(y - stepDistanceLimit, height);
+                Y = y - stepDistanceLimit;
+                X = x;
                 break;
             case RightUp:
-                checkedX = checkWithinLimits(x + stepDistanceLimit, width);
-                checkedY = checkWithinLimits(y - stepDistanceLimit, height);
+                Y = y - stepDistanceLimit;
+                X = x + stepDistanceLimit;
                 break;
             case Right:
-                checkedX = checkWithinLimits(x + stepDistanceLimit, width);
-                checkedY = checkWithinLimits(y, height);
+                Y = y;
+                X = x + stepDistanceLimit;
                 break;
             case RightDown:
-                checkedX = checkWithinLimits(x + stepDistanceLimit, width);
-                checkedY = checkWithinLimits(y + stepDistanceLimit, height);
+                Y = y + stepDistanceLimit;
+                X = x + stepDistanceLimit;
                 break;
             case Down:
-                checkedX = checkWithinLimits(x, width);
-                checkedY = checkWithinLimits(y + stepDistanceLimit, height);
+                Y = y + stepDistanceLimit;
+                X = x;
                 break;
             case LeftDown:
-                checkedX = checkWithinLimits(x - stepDistanceLimit, width);
-                checkedY = checkWithinLimits(y + stepDistanceLimit, height);
+                Y = y + stepDistanceLimit;
+                X = x - stepDistanceLimit;
                 break;
             default: // Direction.SameSpot:
-                checkedX = x;
-                checkedY = y;
+                Y = y;
+                X = x;
                 break;
 
         }
-        return new Location(checkedY, checkedX);
+        return new Location(Y, X);
     }
 
-    private int checkWithinLimits(int num, int limit){
-        if (num < 0){
-            return 0;
-        }else if (num >= limit){
-            return limit - 1;
-        }
-        else {
-            return num;
-        }
-    }
 }

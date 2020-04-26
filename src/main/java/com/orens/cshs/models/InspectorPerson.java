@@ -13,4 +13,12 @@ public class InspectorPerson extends Person{
 
         this.amountOfPeopleMet = 0;
     }
+
+    public int getAmountOfPeopleMet() {
+        return amountOfPeopleMet;
+    }
+
+    public void setAmountOfPeopleMet(int amountOfPeopleMet) {
+        this.amountOfPeopleMet = amountOfPeopleMet;
+    }
 }

@@ -5,6 +5,7 @@ import com.orens.cshs.logic.observer.IInvocable;
 import com.orens.cshs.logic.state.AbstractHealthState;
 import com.orens.cshs.logic.strategy.AbstractLogicStrategy;
 import com.orens.cshs.models.pojos.Location;
+import com.orens.cshs.models.pojos.TimeFrame;
 
 import java.util.Objects;
 
@@ -18,24 +19,20 @@ public abstract class Participant implements IInvocable {
     protected AbstractHealthState currentHealthState;
     protected AbstractLogicStrategy logicStrategy;
 
-    protected long currentScheduledExecutionTime;
-    protected int bodyHeat; //  isSick <- if high than 38 ? true : false ;
-    protected boolean isCarry;
-    protected boolean isDead;
-    protected boolean isInspector;
+    protected long currentScheduledExecutionTime; //beginning of tick
+    protected long locationChangeTimeStamp;
 
-    protected long timePassedFromLastLocationChange;
+    protected long timeInIsolation;//?
 
     public Participant(Location location, AbstractHealthState currentHealthState, AbstractLogicStrategy logicStrategy) {
         this.id = ++globalId;
         this.name = "defaultName with id: "+id;
 
-        this.location = location;
+        this.setLocation(location);
         this.currentHealthState = currentHealthState;
         this.logicStrategy = logicStrategy;
 
         this.currentScheduledExecutionTime = 0L;
-        // TODO: 26/04/2020 initialize bodyHeat and such
 
     }
 
@@ -45,14 +42,24 @@ public abstract class Participant implements IInvocable {
     }
 
     @Override
-    public void updateTimePassedFromLastLocationChange(long scheduledExecutionTime){
-        currentScheduledExecutionTime = scheduledExecutionTime;
+    public void updateCurrentScheduledExecutionTime(long scheduledExecutionTime){
+        setCurrentScheduledExecutionTime(scheduledExecutionTime);
     }
 
+    public void setCurrentScheduledExecutionTime(long currentScheduledExecutionTime) {
+        this.currentScheduledExecutionTime = currentScheduledExecutionTime;
+    }
 
     // get Time Passed From Beginning Of Current Iteration
-    public long getTimePassed(){
-        return TimerUtils.getMillisTimeGapInSecondsFromNow(currentScheduledExecutionTime);
+    public TimeFrame getTimeFrameOfCurrentScheduledExecutionTillNow() {
+        return new TimeFrame(currentScheduledExecutionTime, TimerUtils.getCurrentTimeStampAsRawLongFromSystem());
+        //return TimerUtils.getMillisTimeGapInSecondsFromNow(currentScheduledExecutionTime);
+    }
+
+    // get Time Passed From Last Location Change
+    public TimeFrame getTimeFrameOfLastLocationChangeTillNow(){
+        return new TimeFrame(locationChangeTimeStamp, TimerUtils.getCurrentTimeStampAsRawLongFromSystem());
+        //return TimerUtils.getMillisTimeGapInSecondsFromNow(locationChangeTimeStamp);
     }
 
     public long getId() {
@@ -73,6 +80,13 @@ public abstract class Participant implements IInvocable {
 
     public void setLocation(Location location) {
         this.location = location;
+        this.locationChangeTimeStamp = TimerUtils.getCurrentTimeStampAsRawLongFromSystem();
+    }
+    public void setLocation(Location location, boolean isInSameLocation) {
+        this.location = location;
+        if (!isInSameLocation){
+            this.locationChangeTimeStamp = TimerUtils.getCurrentTimeStampAsRawLongFromSystem();
+        }
     }
 
     public AbstractHealthState getCurrentHealthState() {

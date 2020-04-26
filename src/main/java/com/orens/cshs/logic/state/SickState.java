@@ -1,15 +1,44 @@
 package com.orens.cshs.logic.state;
 
-public class SickState {}
 
-//public class SickState extends AbstractHealthState {
-//
-//    @Override
-//    public boolean changeState(Participant participant) {
-//        return true;
-//    }
-//    @Override
-//    public boolean changeState(InspectorPerson inspectorPerson) {
-//        return true;
-//    }
-//}
+import com.orens.cshs.infra.utils.RandomGenerator;
+import com.orens.cshs.models.InspectorPerson;
+import com.orens.cshs.models.Participant;
+import com.orens.cshs.models.pojos.Seconds;
+import com.orens.cshs.models.pojos.TimeFrame;
+
+public class SickState extends AbstractHealthState {
+
+    public SickState() {
+        super(System.currentTimeMillis(), INSPECTOR_SICK_THRESHOLD + 1);
+    }
+
+    @Override
+    public boolean changeState(Participant participant, Participant otherParticipant) { // if inspectorPerson is sick he does what everybody does
+        return activateRules(participant, otherParticipant);
+    }
+
+    @Override
+    public boolean changeState(InspectorPerson inspectorPerson, Participant otherParticipant) {
+        return activateRules(inspectorPerson, otherParticipant);
+    }
+
+    private boolean activateRules(Participant participant, Participant otherParticipant){
+        TimeFrame sicknessTimeFrame = this.getTimeFrameOfStateChangedTillNow();
+        long sicknessPeriod = sicknessTimeFrame.getPeriodInSeconds();
+
+        boolean trueWith40Percent = RandomGenerator.trueWith40PercentProbability();
+        boolean trueWith60Percent = RandomGenerator.trueWith60PercentProbability();
+        boolean trueWith80Percent = RandomGenerator.trueWith80PercentProbability();
+
+        if (((sicknessPeriod == Seconds.One.getValue() || sicknessPeriod == Seconds.Five.getValue()) && trueWith40Percent) ||
+                ((sicknessPeriod == Seconds.Two.getValue() || sicknessPeriod == Seconds.Four.getValue()) && trueWith60Percent) ||
+                (sicknessPeriod == Seconds.Three.getValue() && trueWith80Percent)){
+
+
+            participant.setCurrentHealthState(new DeadState());
+            return true;
+        }
+        return false;
+    }
+}

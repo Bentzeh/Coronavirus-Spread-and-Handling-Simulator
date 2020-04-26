@@ -24,7 +24,7 @@ public class ParticipantsData {
     public void doIteration(long scheduledExecutionTime) {
         // pass on all of the data collection and do one iteration
         for (IInvocable invocable: simulationParticipants) {
-            invocable.updateTimePassedFromLastLocationChange(scheduledExecutionTime);
+            invocable.updateCurrentScheduledExecutionTime(scheduledExecutionTime);
             invocable.iteration();
         }
     }

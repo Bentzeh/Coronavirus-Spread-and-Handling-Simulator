@@ -1,6 +1,6 @@
 package com.orens.cshs.logic.observer;
 
 public interface IInvocable {
-    void updateTimePassedFromLastLocationChange(long scheduledExecutionTime);
+    void updateCurrentScheduledExecutionTime(long scheduledExecutionTime);
     void iteration();
 }
