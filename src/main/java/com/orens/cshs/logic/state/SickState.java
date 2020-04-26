@@ -10,7 +10,7 @@ import com.orens.cshs.models.pojos.TimeFrame;
 public class SickState extends AbstractHealthState {
 
     public SickState() {
-        super(System.currentTimeMillis(), INSPECTOR_SICK_THRESHOLD + 1);
+        super(System.currentTimeMillis(), SICK_TEMPERATURE_THRESHOLD + 1, State.Sick);
     }
 
     @Override

@@ -6,7 +6,7 @@ import com.orens.cshs.models.Participant;
 public class DeadState extends AbstractHealthState {
 
     public DeadState() {
-        super(System.currentTimeMillis(), INSPECTOR_SICK_THRESHOLD + 1);
+        super(System.currentTimeMillis(), SICK_TEMPERATURE_THRESHOLD + 1, State.Dead);
     }
 
     @Override

@@ -2,16 +2,26 @@
 public class MatrixTest {
 
 
+    public void Boo(A a){
+        doIt(a);
+    }
+
+
     public void doIt(A a){
         a.printIt();
     }
+
     public void doIt(B b){
         b.printThem();
     }
 
+
     public static void main(String[] args) {
 
         MatrixTest matrixTest = new MatrixTest();
+
+        matrixTest.Boo(new C());
+        matrixTest.Boo(new B());
 
         matrixTest.doIt(new C());
         matrixTest.doIt(new B());

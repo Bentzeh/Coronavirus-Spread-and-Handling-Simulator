@@ -21,7 +21,6 @@ public abstract class AbstractLogicStrategy {
     public abstract void executeLogic(Participant participant);
 
     public void initializeBoardWithParticipant(Participant participant){
-        //board.removeParticipantFromLocation(participant);
         boolean isAdded = board.addParticipantToLocation(participant);
     }
 

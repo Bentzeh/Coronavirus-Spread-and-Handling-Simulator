@@ -22,12 +22,12 @@ public abstract class Participant implements IInvocable {
     protected long currentScheduledExecutionTime; //beginning of tick
     protected long locationChangeTimeStamp;
 
-    protected long timeInIsolation;//?
 
     public Participant(Location location, AbstractHealthState currentHealthState, AbstractLogicStrategy logicStrategy) {
         this.id = ++globalId;
         this.name = "defaultName with id: "+id;
 
+        this.location = new Location().getRandomLocation();
         this.setLocation(location);
         this.currentHealthState = currentHealthState;
         this.logicStrategy = logicStrategy;
@@ -53,13 +53,11 @@ public abstract class Participant implements IInvocable {
     // get Time Passed From Beginning Of Current Iteration
     public TimeFrame getTimeFrameOfCurrentScheduledExecutionTillNow() {
         return new TimeFrame(currentScheduledExecutionTime, TimerUtils.getCurrentTimeStampAsRawLongFromSystem());
-        //return TimerUtils.getMillisTimeGapInSecondsFromNow(currentScheduledExecutionTime);
     }
 
     // get Time Passed From Last Location Change
     public TimeFrame getTimeFrameOfLastLocationChangeTillNow(){
         return new TimeFrame(locationChangeTimeStamp, TimerUtils.getCurrentTimeStampAsRawLongFromSystem());
-        //return TimerUtils.getMillisTimeGapInSecondsFromNow(locationChangeTimeStamp);
     }
 
     public long getId() {
@@ -78,13 +76,9 @@ public abstract class Participant implements IInvocable {
         return location;
     }
 
-    public void setLocation(Location location) {
-        this.location = location;
-        this.locationChangeTimeStamp = TimerUtils.getCurrentTimeStampAsRawLongFromSystem();
-    }
-    public void setLocation(Location location, boolean isInSameLocation) {
-        this.location = location;
-        if (!isInSameLocation){
+    public void setLocation(Location newLocation) {
+        if (!location.equals(newLocation)){
+            this.location = newLocation;
             this.locationChangeTimeStamp = TimerUtils.getCurrentTimeStampAsRawLongFromSystem();
         }
     }
@@ -96,6 +90,10 @@ public abstract class Participant implements IInvocable {
     public void setCurrentHealthState(AbstractHealthState currentHealthState) {
         this.currentHealthState = currentHealthState;
     }
+
+//    public void setCurrentHealthState(AbstractHealthState.State currentHealthState) {
+//        this.currentHealthState = currentHealthState;
+//    }
 
     public AbstractLogicStrategy getLogicStrategy() {
         return logicStrategy;

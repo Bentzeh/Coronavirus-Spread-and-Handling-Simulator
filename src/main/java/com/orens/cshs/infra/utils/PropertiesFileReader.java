@@ -62,7 +62,7 @@ public class PropertiesFileReader {
     }
 
     public static Integer getStepDistance() {
-        return Integer.parseInt(properties.getProperty("step.distance"));
+        return Integer.parseInt(properties.getProperty("step.pixel.distance"));
     }
 
     public static Integer getInitialAmountOfHealthyPeople() {
@@ -84,10 +84,13 @@ public class PropertiesFileReader {
     public static Integer getSickTemperatureThreshold() {
         return Integer.parseInt(properties.getProperty("persons.sick.temperature.threshold"));
     }
+    public static Integer getInspectorSickThreshold() {
+        return Integer.parseInt(properties.getProperty("inspector.sick.threshold"));
+    }
 
 
     public static Integer getContagiousRadius() {
-        return Integer.parseInt(properties.getProperty("contagious.radius"));
+        return Integer.parseInt(properties.getProperty("contagious.pixel.radius"));
     }
     public static Long getContagiousTimeInMilliseconds() {
         return Long.parseLong(properties.getProperty("contagious.time"));

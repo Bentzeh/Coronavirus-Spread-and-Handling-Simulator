@@ -10,7 +10,7 @@ import com.orens.cshs.models.pojos.TimeFrame;
 public class CarryingState extends AbstractHealthState {
 
     public CarryingState() {
-        super(System.currentTimeMillis(), INSPECTOR_SICK_THRESHOLD - 1);
+        super(System.currentTimeMillis(), SICK_TEMPERATURE_THRESHOLD - 1, State.Carrying);
     }
 
     @Override
@@ -21,6 +21,11 @@ public class CarryingState extends AbstractHealthState {
     @Override
     public boolean changeState(InspectorPerson inspectorPerson, Participant otherParticipant) {
         return activateRules(inspectorPerson, otherParticipant);
+    }
+
+    @Override
+    public boolean isIsolated() {
+        return false;
     }
 
     private boolean activateRules(Participant participant, Participant otherParticipant){

@@ -14,7 +14,7 @@ public class HealthyState extends AbstractHealthState {
 
 
     public HealthyState() {
-        super(System.currentTimeMillis(), INSPECTOR_SICK_THRESHOLD -1);
+        super(System.currentTimeMillis(), SICK_TEMPERATURE_THRESHOLD - 1, State.Healthy);
     }
 
     @Override
@@ -35,14 +35,17 @@ public class HealthyState extends AbstractHealthState {
 
     @Override
     public boolean changeState(InspectorPerson inspectorPerson, Participant otherParticipant) {
-        int amountOfPeopleMet = inspectorPerson.getAmountOfPeopleMet();
-        if (otherParticipant.getCurrentHealthState().bodyHeat >= SICK_TEMPERATURE_THRESHOLD){
-            // move to isolation (in sick state)
-            inspectorPerson.setAmountOfPeopleMet(amountOfPeopleMet+1);
-        }
-        if (amountOfPeopleMet > INSPECTOR_SICK_THRESHOLD){
-            inspectorPerson.setAmountOfPeopleMet(0);
-            inspectorPerson.setCurrentHealthState(new CarryingState());
+        if (inspectorPerson.getLocation().equals(otherParticipant.getLocation())){
+            int amountOfPeopleMet = inspectorPerson.getAmountOfPeopleMet();
+            if (otherParticipant.getCurrentHealthState().bodyHeat >= SICK_TEMPERATURE_THRESHOLD){
+                // move to isolation (in sick state)
+                inspectorPerson.setAmountOfPeopleMet(amountOfPeopleMet+1);
+            }
+            if (amountOfPeopleMet > INSPECTOR_SICK_THRESHOLD){
+                inspectorPerson.setAmountOfPeopleMet(0);
+                inspectorPerson.setCurrentHealthState(new CarryingState());
+                return true;
+            }
         }
         return false;
     }
