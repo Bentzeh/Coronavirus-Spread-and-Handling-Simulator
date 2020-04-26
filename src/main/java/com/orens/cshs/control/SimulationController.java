@@ -92,7 +92,7 @@ public class SimulationController  extends TimerTask {
     private void mainLoop(){
         LoggerHandler.getInstance().log(ReportLevel.INFO, "Current time is: " + LocalDateTime.ofInstant(Instant.ofEpochMilli(scheduledExecutionTime()), ZoneId.systemDefault()));
         display.updateDisplayView();
-        participantsData.doIteration(); // TODO: 26/04/2020 add time to method argument
+        participantsData.doIteration(scheduledExecutionTime());
     }
 
 

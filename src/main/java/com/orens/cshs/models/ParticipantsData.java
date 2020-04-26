@@ -21,11 +21,13 @@ public class ParticipantsData {
     }
 
 
-    public void doIteration() { // TODO: 26/04/2020 add time to method argument
+    public void doIteration(long scheduledExecutionTime) {
         // pass on all of the data collection and do one iteration
         for (IInvocable invocable: simulationParticipants) {
+            invocable.updateTimePassedFromLastLocationChange(scheduledExecutionTime);
             invocable.iteration();
-            invocable.updateTimePassedFromLastLocationChange(); // TODO: 26/04/2020 add time to method argument
         }
     }
+
+
 }

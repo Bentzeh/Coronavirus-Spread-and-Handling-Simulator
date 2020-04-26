@@ -1,5 +1,6 @@
 package com.orens.cshs.models;
 
+import com.orens.cshs.infra.utils.TimerUtils;
 import com.orens.cshs.logic.observer.IInvocable;
 import com.orens.cshs.logic.state.AbstractHealthState;
 import com.orens.cshs.logic.strategy.AbstractLogicStrategy;
@@ -17,6 +18,7 @@ public abstract class Participant implements IInvocable {
     protected AbstractHealthState currentHealthState;
     protected AbstractLogicStrategy logicStrategy;
 
+    protected long currentScheduledExecutionTime;
     protected int bodyHeat; //  isSick <- if high than 38 ? true : false ;
     protected boolean isCarry;
     protected boolean isDead;
@@ -32,6 +34,7 @@ public abstract class Participant implements IInvocable {
         this.currentHealthState = currentHealthState;
         this.logicStrategy = logicStrategy;
 
+        this.currentScheduledExecutionTime = 0L;
         // TODO: 26/04/2020 initialize bodyHeat and such
 
     }
@@ -42,8 +45,14 @@ public abstract class Participant implements IInvocable {
     }
 
     @Override
-    public void updateTimePassedFromLastLocationChange(){
-        // TODO: 26/04/2020  update passing time from last change
+    public void updateTimePassedFromLastLocationChange(long scheduledExecutionTime){
+        currentScheduledExecutionTime = scheduledExecutionTime;
+    }
+
+
+    // get Time Passed From Beginning Of Current Iteration
+    public long getTimePassed(){
+        return TimerUtils.getMillisTimeGapInSecondsFromNow(currentScheduledExecutionTime);
     }
 
     public long getId() {

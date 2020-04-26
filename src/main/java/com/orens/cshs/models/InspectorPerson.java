@@ -13,5 +13,4 @@ public class InspectorPerson extends Person{
 
         this.amountOfPeopleMet = 0;
     }
-
 }
