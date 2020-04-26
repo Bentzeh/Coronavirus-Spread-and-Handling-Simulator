@@ -2,7 +2,7 @@ package com.orens.cshs.display;
 
 import com.orens.cshs.infra.utils.PropertiesFileReader;
 import com.orens.cshs.models.Board;
-import com.orens.cshs.pojos.Pixel;
+import com.orens.cshs.models.pojos.Pixel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,6 +11,9 @@ import java.awt.event.ActionListener;
 
 
 public class GridLayoutDisplay extends AbstractDisplay{
+
+    private Color emptyColor = new Color(179, 219, 218);
+    private Color populatedColor = new Color(80, 9 ,150);
 
     private JFrame frame;
     private JPanel[][] displayMat;
@@ -96,9 +99,10 @@ public class GridLayoutDisplay extends AbstractDisplay{
                     }
                 }
 
-                panelBox.setBackground(new Color(179, 219, 218));
+                panelBox.setBackground(emptyColor);
 
                 JLabel label = new JLabel("");
+                label.setForeground(Color.green);
                 panelBox.add(label);
 
                 int x = ((int)(panelBox.getSize().getWidth()) - (int)(label.getSize().getWidth())) / 2;
@@ -119,14 +123,21 @@ public class GridLayoutDisplay extends AbstractDisplay{
         for (int i = 0; i < displayMat.length; ++i) {
             for (int j = 0; j < displayMat[0].length; ++j) {
                 JPanel panelBox = displayMat[i][j];
+                JLabel label = (JLabel)panelBox.getComponent(0);
+
 
                 /// update grid by reading from board.field
-                displayMat[1][9].setBackground(new Color(60, 70 ,200));
-                if (!BoardField[i][j].getValue().equals("(0)")){
-                    panelBox.setBackground(new Color(80, 9 ,150));
-                    //panelBox.setText("");
+                Pixel pixel = BoardField[i][j];
+                if (pixel.hasParticipant()){
+                    panelBox.setBackground(populatedColor);
+                    String participantIds = pixel.getInPlaceParticipantIds();
+                    label.setText(participantIds);
                     //panelBox.add(label, BorderLayout.CENTER);
 
+                }
+                else {
+                    label.setText("");
+                    panelBox.setBackground(emptyColor);
                 }
                 ////
             }

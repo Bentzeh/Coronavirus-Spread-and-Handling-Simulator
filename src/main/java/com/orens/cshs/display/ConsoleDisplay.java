@@ -4,7 +4,7 @@ import com.orens.cshs.infra.logger.IReports;
 import com.orens.cshs.infra.logger.LoggerHandler;
 import com.orens.cshs.infra.logger.ReportLevel;
 import com.orens.cshs.models.Board;
-import com.orens.cshs.pojos.Pixel;
+import com.orens.cshs.models.pojos.Pixel;
 
 public class ConsoleDisplay extends AbstractDisplay {
 
@@ -25,9 +25,11 @@ public class ConsoleDisplay extends AbstractDisplay {
         Pixel[][] field = board.getField();
 
         StringBuilder fieldAsString = new StringBuilder();
-        for (Pixel[] pixels : field) {
+        //for (Pixel[] pixels : field) {
+        for (int i = 0; i < field.length; ++i) {
             for (int j = 0; j < field[0].length; ++j) {
-                fieldAsString.append(pixels[j].toString()).append(", ");
+                Pixel pixel = field[i][j];
+                fieldAsString.append(pixel.toString()).append(", ");
             }
             fieldAsString.append("\n");
         }

@@ -1,6 +1,6 @@
 package com.orens.cshs.infra.utils;
 
-import com.orens.cshs.pojos.Direction;
+import com.orens.cshs.models.pojos.Direction;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -13,6 +13,13 @@ public class RandomGenerator {
     private static final int AMOUNT_OF_DIRECTIONS = 9;
     private static final int WIDTH = PropertiesFileReader.getBoardWidth();
     private static final int HEIGHT = PropertiesFileReader.getBoardHeight();
+
+
+    private static final int PROBABILITY_LIST_SIZE = 5;
+
+    private static final int[] probability40 = new int[]{1,1,0,0,0};
+    private static final int[] probability60 = new int[]{1,1,1,0,0};
+    private static final int[] probability80 = new int[]{1,1,1,1,0};
 
 
     public static int getRandomXWithinBorders(){
@@ -30,4 +37,24 @@ public class RandomGenerator {
     }
 
 
+    public static int getRandomNumberInRange(int num) {
+        return (int)((Math.random() * num));
+    }
+
+
+
+    public static boolean trueWith40PercentProbability(){
+        int index = RandomGenerator.getRandomNumberInRange(PROBABILITY_LIST_SIZE);
+        return (probability40[index] == 1);
+    }
+
+    public static boolean trueWith60PercentProbability(){
+        int index = RandomGenerator.getRandomNumberInRange(PROBABILITY_LIST_SIZE);
+        return (probability60[index] == 1);
+    }
+
+    public static boolean trueWith80PercentProbability(){
+        int index = RandomGenerator.getRandomNumberInRange(PROBABILITY_LIST_SIZE);
+        return (probability80[index] == 1);
+    }
 }

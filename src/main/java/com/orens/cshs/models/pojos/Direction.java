@@ -1,4 +1,4 @@
-package com.orens.cshs.pojos;
+package com.orens.cshs.models.pojos;
 
 public enum Direction {
     Left ,

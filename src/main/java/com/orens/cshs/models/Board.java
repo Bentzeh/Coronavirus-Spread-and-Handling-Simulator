@@ -1,7 +1,8 @@
 package com.orens.cshs.models;
 
 import com.orens.cshs.infra.utils.PropertiesFileReader;
-import com.orens.cshs.pojos.Pixel;
+import com.orens.cshs.models.pojos.Location;
+import com.orens.cshs.models.pojos.Pixel;
 
 public class Board {
 
@@ -27,11 +28,6 @@ public class Board {
         }
     }
 
-    public void setValueAt(int x, int y, String newValue){
-        field[y][x].setValue(newValue);
-    }
-
-
     public Pixel[][] getField() {
         return field;
     }
@@ -42,5 +38,17 @@ public class Board {
 
     public int getFieldHeight() {
         return fieldHeight;
+    }
+
+    public boolean addParticipantToLocation(Participant participant) {
+        Location participantLocation = participant.getLocation();
+        Pixel pixel = field[participantLocation.getY()][participantLocation.getX()];
+        return pixel.addParticipantToPixel(participant);
+    }
+
+    public boolean removeParticipantFromLocation(Participant participant) {
+        Location participantLocation = participant.getLocation();
+        Pixel pixel = field[participantLocation.getY()][participantLocation.getX()];
+        return pixel.removeParticipantFromPixel(participant);
     }
 }
