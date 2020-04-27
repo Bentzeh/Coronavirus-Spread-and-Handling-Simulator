@@ -2,7 +2,7 @@ package com.orens.cshs.display;
 
 import com.orens.cshs.infra.utils.PropertiesFileReader;
 import com.orens.cshs.models.Board;
-import com.orens.cshs.models.pojos.Pixel;
+import com.orens.cshs.models.Pixel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,7 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 
-public class GridLayoutDisplay extends AbstractDisplay{
+public class GridLayoutOutput extends AbstractOutput {
 
     private Color emptyColor = new Color(179, 219, 218);
     private Color populatedColor = new Color(80, 9 ,150);
@@ -18,7 +18,7 @@ public class GridLayoutDisplay extends AbstractDisplay{
     private JFrame frame;
     private JPanel[][] displayMat;
 
-    public GridLayoutDisplay(Board board) {
+    public GridLayoutOutput(Board board) {
         super(board);
     }
 

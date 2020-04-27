@@ -1,8 +1,6 @@
 package com.orens.cshs.models;
 
 import com.orens.cshs.infra.utils.PropertiesFileReader;
-import com.orens.cshs.models.pojos.Location;
-import com.orens.cshs.models.pojos.Pixel;
 
 public class Board {
 

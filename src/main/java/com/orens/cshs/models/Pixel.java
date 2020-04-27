@@ -1,7 +1,4 @@
-package com.orens.cshs.models.pojos;
-
-import com.orens.cshs.models.Participant;
-import com.orens.cshs.models.SimulationParticipantsList;
+package com.orens.cshs.models;
 
 import java.util.Iterator;
 

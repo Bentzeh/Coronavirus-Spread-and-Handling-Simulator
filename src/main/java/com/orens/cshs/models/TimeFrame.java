@@ -1,4 +1,4 @@
-package com.orens.cshs.models.pojos;
+package com.orens.cshs.models;
 
 import com.orens.cshs.infra.utils.TimerUtils;
 
