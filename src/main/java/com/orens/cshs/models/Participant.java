@@ -31,6 +31,7 @@ public abstract class Participant implements IInvocable {
         this.id = ++globalId;
         this.name = "defaultName with id: "+id;
 
+        location = new Location().getRandomLocation();
         setLocation(new Location().getRandomLocation());
         initHealthStates();
         this.logicStrategy = logicStrategy;

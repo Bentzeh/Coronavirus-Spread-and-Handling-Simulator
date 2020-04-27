@@ -8,7 +8,7 @@ public abstract class AbstractHealthState {
 
     protected static final int  SICK_TEMPERATURE_THRESHOLD = PropertiesFileReader.getSickTemperatureThreshold();
 
-    public enum State {Healthy, Carrying, Sick, Dead;}
+    public enum State {Healthy, Carrying, Sick;}
     protected State currentState;
 
     protected long stateChangedTimeStamp;

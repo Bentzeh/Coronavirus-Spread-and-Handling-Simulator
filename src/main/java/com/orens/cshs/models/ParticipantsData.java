@@ -14,6 +14,7 @@ public class ParticipantsData {
     public ParticipantsData() {
         this.board = new Board();
         this.simulationParticipants = new SimulationParticipantsList<>();
+        initParticipants();
     }
 
 
