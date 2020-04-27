@@ -18,7 +18,8 @@ public class PropertiesFileReader {
     static {
         properties = new Properties();
         try {
-            LoggerHandler.getInstance().log(ReportLevel.INFO, "loading .properties file named: "+ propertiesFileName);
+            //LoggerHandler.getInstance().log(ReportLevel.INFO, "loading .properties file named: "+ propertiesFileName);
+
             //properties.load(new FileReader(".\\src\\main\\resources\\configurations\\"+propertiesFileName));
             properties.load(new FileReader("."+ File.separator+"src"+File.separator+"main"+File.separator+"resources"+File.separator+"configurations"+File.separator+ propertiesFileName));
         } catch (FileNotFoundException e) {

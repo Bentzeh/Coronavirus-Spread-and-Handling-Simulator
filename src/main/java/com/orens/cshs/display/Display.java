@@ -8,6 +8,7 @@ public class Display {
 
     public Display(ParticipantsData participantsData) {
         outputDisplay = new GridLayoutOutput(participantsData.getBoard());
+        //outputDisplay = new ConsoleOutput(participantsData.getBoard());
         outputDisplay.InitializeDisplay();
     }
 

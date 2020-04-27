@@ -65,7 +65,9 @@ public class StandardStrategy extends AbstractLogicStrategy {
                 long overlappingTime = TimeFrame.getOverlappingTime(participantTimePassedFromLastLocationChange, otherParticipantTimePassedFromLastLocationChange);
                 boolean timeOverlap = overlappingTime < CONTAGIOUS_TIME ;
 
-                if  (inRange && timeOverlap && RandomGenerator.trueWith80PercentProbability()){
+                boolean isOtherSick = otherParticipant.getCurrentHealthState().isSick();
+
+                if  (isOtherSick && inRange && timeOverlap && RandomGenerator.trueWith80PercentProbability()){
                     normalPerson.setCurrentHealthState(AbstractHealthState.State.Carrying);
                     isFinish = true;
                 }

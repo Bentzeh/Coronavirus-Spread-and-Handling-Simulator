@@ -8,11 +8,14 @@ import com.orens.cshs.logic.state.HealthyState;
 import com.orens.cshs.logic.state.SickState;
 import com.orens.cshs.logic.strategy.AbstractLogicStrategy;
 
+import java.awt.*;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Objects;
 
 public abstract class Participant implements IInvocable {
+
+    protected Color participantColor;
 
     protected static long globalId = 0L;
     protected final long id;
@@ -26,8 +29,12 @@ public abstract class Participant implements IInvocable {
     protected long currentScheduledExecutionTime; //beginning of tick
     protected long locationChangeTimeStamp;
 
+    protected Map<AbstractHealthState.State, Color> participantColors;
 
     public Participant(AbstractLogicStrategy logicStrategy) {
+        this.participantColors = new EnumMap<>(AbstractHealthState.State.class);
+        this.participantColor = Pixel.emptyColor;
+
         this.id = ++globalId;
         this.name = "defaultName with id: "+id;
 
@@ -54,6 +61,7 @@ public abstract class Participant implements IInvocable {
     }
 
     public void setCurrentHealthState(AbstractHealthState.State HealthState) {
+        setColor(HealthState);
         this.currentHealthState = healthStates.get(HealthState);
         this.currentHealthState.takeStateChangedTimestamp();
     }
@@ -118,5 +126,11 @@ public abstract class Participant implements IInvocable {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    protected abstract void setColor(AbstractHealthState.State state);
+
+    public Color getColor(){
+        return participantColor;
     }
 }

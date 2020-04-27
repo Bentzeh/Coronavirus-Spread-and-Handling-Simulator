@@ -12,9 +12,6 @@ import java.awt.event.ActionListener;
 
 public class GridLayoutOutput extends AbstractOutput {
 
-    private Color emptyColor = new Color(179, 219, 218);
-    private Color populatedColor = new Color(80, 9 ,150);
-
     private JFrame frame;
     private JPanel[][] displayMat;
 
@@ -99,7 +96,7 @@ public class GridLayoutOutput extends AbstractOutput {
                     }
                 }
 
-                panelBox.setBackground(emptyColor);
+                panelBox.setBackground(Pixel.emptyColor);
 
                 JLabel label = new JLabel("");
                 label.setForeground(Color.green);
@@ -128,17 +125,19 @@ public class GridLayoutOutput extends AbstractOutput {
 
                 /// update grid by reading from board.field
                 Pixel pixel = BoardField[i][j];
-                if (pixel.hasParticipant()){
-
-                    panelBox.setBackground(populatedColor);
+                if (pixel.hasParticipant()) {
                     String participantIds = pixel.getInPlaceParticipantIds();
                     label.setText(participantIds);
-                    //panelBox.add(label, BorderLayout.CENTER);
-
+                    if (pixel.hasMoreThenOneParticipant()){
+                        panelBox.setBackground(Pixel.populatedColor);
+                    }
+                    else {
+                        panelBox.setBackground(pixel.getFirstParticipant().getColor());
+                    }
                 }
                 else {
                     label.setText("");
-                    panelBox.setBackground(emptyColor);
+                    panelBox.setBackground(Pixel.emptyColor);
                 }
                 ////
             }

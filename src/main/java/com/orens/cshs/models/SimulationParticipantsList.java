@@ -58,5 +58,7 @@ public class SimulationParticipantsList<Type> implements Iterable<Type>{
     }
 
 
-
+    public Type getFirstInList() {
+        return list.get(0);
+    }
 }

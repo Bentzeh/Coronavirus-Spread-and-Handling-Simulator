@@ -25,7 +25,6 @@ public class ConsoleOutput extends AbstractOutput {
         Pixel[][] field = board.getField();
 
         StringBuilder fieldAsString = new StringBuilder();
-        //for (Pixel[] pixels : field) {
         for (int i = 0; i < field.length; ++i) {
             for (int j = 0; j < field[0].length; ++j) {
                 Pixel pixel = field[i][j];
