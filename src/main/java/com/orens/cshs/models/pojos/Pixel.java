@@ -16,7 +16,6 @@ public class Pixel {
         this.location = new Location(y, x);
         //this.participantsAtThisPosition = new ArrayList<>();
         this.participantsAtThisPosition = new SimulationParticipantsList<>();
-
         this.val = "(-)";
     }
 

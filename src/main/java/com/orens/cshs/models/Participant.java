@@ -2,7 +2,7 @@ package com.orens.cshs.models;
 
 import com.orens.cshs.infra.utils.TimerUtils;
 import com.orens.cshs.logic.observer.IInvocable;
-import com.orens.cshs.logic.state.AbstractHealthState;
+import com.orens.cshs.logic.state.HealthState;
 import com.orens.cshs.logic.strategy.AbstractLogicStrategy;
 import com.orens.cshs.models.pojos.Location;
 import com.orens.cshs.models.pojos.TimeFrame;
@@ -16,24 +16,31 @@ public abstract class Participant implements IInvocable {
     protected String name;
 
     protected Location location;
-    protected AbstractHealthState currentHealthState;
+    //protected Map<HealthState.State, HealthState> healthStates;
+    protected HealthState currentHealthState;
     protected AbstractLogicStrategy logicStrategy;
 
     protected long currentScheduledExecutionTime; //beginning of tick
     protected long locationChangeTimeStamp;
 
 
-    public Participant(Location location, AbstractHealthState currentHealthState, AbstractLogicStrategy logicStrategy) {
+    public Participant(Location location, AbstractLogicStrategy logicStrategy) {
         this.id = ++globalId;
         this.name = "defaultName with id: "+id;
 
         this.location = new Location().getRandomLocation();
         this.setLocation(location);
-        this.currentHealthState = currentHealthState;
+        initHealthStates();
         this.logicStrategy = logicStrategy;
 
         this.currentScheduledExecutionTime = 0L;
 
+    }
+
+    private void initHealthStates(){
+        //this.healthStates = new EnumMap<>(HealthState.State.class);
+        this.currentHealthState = new HealthState();
+        setCurrentHealthState(HealthState.State.Healthy);
     }
 
     @Override
@@ -83,17 +90,15 @@ public abstract class Participant implements IInvocable {
         }
     }
 
-    public AbstractHealthState getCurrentHealthState() {
+    public HealthState getCurrentHealthState() {
         return currentHealthState;
     }
 
-    public void setCurrentHealthState(AbstractHealthState currentHealthState) {
-        this.currentHealthState = currentHealthState;
-    }
+    public void setCurrentHealthState(HealthState.State currentHealthState) {
+        //this.currentHealthState = healthStates.get(currentHealthState);
 
-//    public void setCurrentHealthState(AbstractHealthState.State currentHealthState) {
-//        this.currentHealthState = currentHealthState;
-//    }
+        this.currentHealthState.setStateWithTimeStamp(currentHealthState);
+    }
 
     public AbstractLogicStrategy getLogicStrategy() {
         return logicStrategy;

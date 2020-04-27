@@ -1,14 +1,13 @@
 package com.orens.cshs.logic.strategy;
 
-import com.orens.cshs.infra.utils.PropertiesFileReader;
 import com.orens.cshs.infra.utils.RandomGenerator;
 import com.orens.cshs.logic.observer.IInvocable;
-import com.orens.cshs.logic.state.AbstractHealthState;
-import com.orens.cshs.logic.state.CarryingState;
+import com.orens.cshs.logic.state.HealthState;
 import com.orens.cshs.models.Board;
 import com.orens.cshs.models.Participant;
 import com.orens.cshs.models.ParticipantsData;
 import com.orens.cshs.models.pojos.Location;
+import com.orens.cshs.models.pojos.Seconds;
 import com.orens.cshs.models.pojos.TimeFrame;
 
 import java.util.Iterator;
@@ -20,16 +19,9 @@ public class NormalPersonStrategy extends AbstractLogicStrategy {
     }
 
 
-    private static final long   CONTAGIOUS_TIME            = PropertiesFileReader.getContagiousTimeInMilliseconds();
-    protected static final int  INSPECTOR_SICK_THRESHOLD   = PropertiesFileReader.getInspectorSickThreshold();;
-    protected static final int  SICK_TEMPERATURE_THRESHOLD = PropertiesFileReader.getSickTemperatureThreshold();
-    protected static final int  CONTAGIOUS_RADIUS          = PropertiesFileReader.getContagiousRadius();
-    protected static final long ISOLATION_TIME             = PropertiesFileReader.getIsolationTimeInMilliseconds();
-    /// move to abst
-
     @Override
     public void executeLogic(Participant participant) {
-        AbstractHealthState participantState = participant.getCurrentHealthState();
+        HealthState participantState = participant.getCurrentHealthState();
         if (!participantState.isIsolated()){
             // 1. generate random location
             Location newLocation = getNextRandomLocation(participant.getLocation());
@@ -44,24 +36,29 @@ public class NormalPersonStrategy extends AbstractLogicStrategy {
                 boolean isFinish = false;
                 while (listOfSimulationParticipantsIterator.hasNext() && !isFinish) {
                     Participant otherParticipant = (Participant)listOfSimulationParticipantsIterator.next();
-                    isFinish = HealthState(participant, otherParticipant);
-                    //isFinish = participant.getCurrentHealthState().changeState(participant, otherParticipant);
+                    isFinish = healthState(participant, otherParticipant);
                 }
             }
-            else {
-                // calculate change state with probabilities (Carry,Sick)
+            else if (participantState.isCarrying()){
+                boolean isChanged = isStateChangeable(participant, HealthState.State.Sick);
+            }
+            else { // if (participantState.isSick()){
+                boolean isChanged = isStateChangeable(participant, HealthState.State.Dead);
+//                if (isChanged){
+//                    board.removeParticipantFromLocation(participant);
+//                    participantsData.removeSimulationParticipant(participant);
+//                }
             }
         }
         else {
-            // check if isolation time over and change state
-            if (!participantState.updateAndReportIsolationTime()){
-                //change state to healthy
+            if (participantState.isIsolationTimeOver()){
+                participant.setCurrentHealthState(HealthState.State.Healthy);
             }
         }
     }
 
 
-    public boolean HealthState(Participant participant, Participant otherParticipant) {
+    public boolean healthState(Participant participant, Participant otherParticipant) {
         boolean inRange = Location.isWithinRadius(participant.getLocation(), otherParticipant.getLocation(), CONTAGIOUS_RADIUS);
 
         TimeFrame participantTimePassedFromLastLocationChange      = participant.getTimeFrameOfLastLocationChangeTillNow();
@@ -70,144 +67,30 @@ public class NormalPersonStrategy extends AbstractLogicStrategy {
         boolean timeOverlap = overlappingTime < CONTAGIOUS_TIME ;
 
         if (inRange && timeOverlap && RandomGenerator.trueWith80PercentProbability()){
-            participant.setCurrentHealthState(new CarryingState());
+            participant.setCurrentHealthState(HealthState.State.Carrying);
             return true;
         }
         return false;
     }
 
-//    public boolean CarryingState(Participant participant, Participant otherParticipant) {
-//        TimeFrame timeFrame = participantState.getTimeFrameOfStateChangedTillNow();
-//        long sicknessPeriod = timeFrame.getPeriodInSeconds();
-//
-//        boolean trueWith40Percent = RandomGenerator.trueWith40PercentProbability();
-//        boolean trueWith60Percent = RandomGenerator.trueWith60PercentProbability();
-//        boolean trueWith80Percent = RandomGenerator.trueWith80PercentProbability();
-//
-//        if (((sicknessPeriod == Seconds.One.getValue() || sicknessPeriod == Seconds.Five.getValue()) && trueWith40Percent) ||
-//                ((sicknessPeriod == Seconds.Two.getValue() || sicknessPeriod == Seconds.Four.getValue()) && trueWith60Percent) ||
-//                (sicknessPeriod == Seconds.Three.getValue() && trueWith80Percent)){
-//
-//
-//            participant.setCurrentHealthState(new SickState());
-//            return true;
-//        }
-//        return false;
-//    }
+    public boolean isStateChangeable(Participant participant, HealthState.State nextState) {
+        TimeFrame timeFrame = participant.getCurrentHealthState().getTimeFrameOfStateChangedTillNow();
+        long period = timeFrame.getPeriodInSeconds();
 
+        boolean trueWith40Percent = RandomGenerator.trueWith40PercentProbability();
+        boolean trueWith60Percent = RandomGenerator.trueWith60PercentProbability();
+        boolean trueWith80Percent = RandomGenerator.trueWith80PercentProbability();
 
+        if (((period == Seconds.One.getValue() || period == Seconds.Five.getValue()) && trueWith40Percent) ||
+                ((period == Seconds.Two.getValue() || period == Seconds.Four.getValue()) && trueWith60Percent) ||
+                (period == Seconds.Three.getValue() && trueWith80Percent) ||
+                (period >= Seconds.Six.getValue())){
 
-
-
-
-
-
-
-
-//
-//    private boolean changeState(Participant participant, AbstractHealthState participantState){
-//        TimeFrame stateTimeFrame = participantState.getTimeFrameOfStateChangedTillNow();
-//        long sicknessPeriod = stateTimeFrame.getPeriodInSeconds();
-//
-//        boolean trueWith40Percent = RandomGenerator.trueWith40PercentProbability();
-//        boolean trueWith60Percent = RandomGenerator.trueWith60PercentProbability();
-//        boolean trueWith80Percent = RandomGenerator.trueWith80PercentProbability();
-//
-//        return (((sicknessPeriod == Seconds.One.getValue() || sicknessPeriod == Seconds.Five.getValue()) && trueWith40Percent) ||
-//                ((sicknessPeriod == Seconds.Two.getValue() || sicknessPeriod == Seconds.Four.getValue()) && trueWith60Percent) ||
-//                (sicknessPeriod == Seconds.Three.getValue() && trueWith80Percent));
-//            //participant.setCurrentHealthState(new DeadState());
-//    }
-//
-//
-//    public void executeLogic2(Participant participant) {
-//
-//        //if (participant.getCurrentHealthState().isIsolated()) { if he is isolated
-//        if (true) {
-//            // 1. generate random location
-//            Location newLocation = getNextRandomLocation(participant.getLocation());
-//
-//            // 2. set new location on participant and update board on new location
-//            board.removeParticipantFromLocation(participant);
-//            if (!participant.getLocation().equals(newLocation)){ //sameSpot
-//                participant.setLocation(newLocation);
-//            }
-//            board.addParticipantToLocation(participant);
-//        }
-//
-//
-//        // if im healthy or inspector otherwise just calculate time
-//        // 3. invoke  logic
-//        Iterator<IInvocable> listOfSimulationParticipantsIterator = participantsData.getSimulationParticipantsIterator();
-//        boolean isFinish = false;
-//        while (listOfSimulationParticipantsIterator.hasNext() && !isFinish) {
-//            Participant otherParticipant = (Participant)listOfSimulationParticipantsIterator.next();
-//            // check if he is near me
-//            isFinish = participant.getCurrentHealthState().changeState(participant, otherParticipant);
-//        }
-//
-//    }
-
-//    public void executeLogic(InspectorPerson participant) {
-//
-//        //if (participant.getCurrentHealthState().isMovable()) { if he is isolated
-//        if (true) {
-//            // 1. generate random location
-//            Location newLocation = getNextRandomLocation(participant.getLocation());
-//
-//            // 2. set new location on participant and update board on new location
-//            board.removeParticipantFromLocation(participant);
-//            if (!participant.getLocation().equals(newLocation)){ //sameSpot
-//                participant.setLocation(newLocation);
-//            }
-//            board.addParticipantToLocation(participant);
-//        }
-//
-//        // 3. invoke  logic
-//        Iterator<IInvocable> listOfSimulationParticipantsIterator = participantsData.getSimulationParticipantsIterator();
-//        boolean isFinish = false;
-//        while (listOfSimulationParticipantsIterator.hasNext() && !isFinish) {
-//            Participant otherParticipant = (Participant)listOfSimulationParticipantsIterator.next();
-//            // check if he is near me
-//            isFinish = participant.getCurrentHealthState().changeState(participant, otherParticipant);
-//        }
-//
-//    }
-
-
-
-//    private void changeState(Participant participant, CarryingState participantState){
-//        TimeFrame sicknessTimeFrame = participantState.getTimeFrameOfStateChangedTillNow();
-//        long sicknessPeriod = sicknessTimeFrame.getPeriodInSeconds();
-//
-//        boolean trueWith40Percent = RandomGenerator.trueWith40PercentProbability();
-//        boolean trueWith60Percent = RandomGenerator.trueWith60PercentProbability();
-//        boolean trueWith80Percent = RandomGenerator.trueWith80PercentProbability();
-//
-//        if (((sicknessPeriod == Seconds.One.getValue() || sicknessPeriod == Seconds.Five.getValue()) && trueWith40Percent) ||
-//                ((sicknessPeriod == Seconds.Two.getValue() || sicknessPeriod == Seconds.Four.getValue()) && trueWith60Percent) ||
-//                (sicknessPeriod == Seconds.Three.getValue() && trueWith80Percent)){
-//
-//            participant.setCurrentHealthState(new SickState());
-//        }
-//    }
-//
-//    private void changeState(Participant participant, SickState participantState){
-//        TimeFrame sicknessTimeFrame = participantState.getTimeFrameOfStateChangedTillNow();
-//        long sicknessPeriod = sicknessTimeFrame.getPeriodInSeconds();
-//
-//        boolean trueWith40Percent = RandomGenerator.trueWith40PercentProbability();
-//        boolean trueWith60Percent = RandomGenerator.trueWith60PercentProbability();
-//        boolean trueWith80Percent = RandomGenerator.trueWith80PercentProbability();
-//
-//        if (((sicknessPeriod == Seconds.One.getValue() || sicknessPeriod == Seconds.Five.getValue()) && trueWith40Percent) ||
-//                ((sicknessPeriod == Seconds.Two.getValue() || sicknessPeriod == Seconds.Four.getValue()) && trueWith60Percent) ||
-//                (sicknessPeriod == Seconds.Three.getValue() && trueWith80Percent)){
-//
-//            participant.setCurrentHealthState(new DeadState());
-//        }
-//    }
-
+            participant.setCurrentHealthState(nextState);
+            return true;
+        }
+        return false;
+    }
 
 }
 

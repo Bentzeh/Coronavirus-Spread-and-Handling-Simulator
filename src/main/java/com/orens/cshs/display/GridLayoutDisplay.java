@@ -129,6 +129,7 @@ public class GridLayoutDisplay extends AbstractDisplay{
                 /// update grid by reading from board.field
                 Pixel pixel = BoardField[i][j];
                 if (pixel.hasParticipant()){
+
                     panelBox.setBackground(populatedColor);
                     String participantIds = pixel.getInPlaceParticipantIds();
                     label.setText(participantIds);

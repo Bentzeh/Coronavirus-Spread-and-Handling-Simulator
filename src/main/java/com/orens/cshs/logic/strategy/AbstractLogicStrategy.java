@@ -10,6 +10,9 @@ import com.orens.cshs.models.pojos.Location;
 
 public abstract class AbstractLogicStrategy {
 
+    protected static final long CONTAGIOUS_TIME            = PropertiesFileReader.getContagiousTimeInMilliseconds();
+    protected static final int  CONTAGIOUS_RADIUS          = PropertiesFileReader.getContagiousRadius();
+
     protected Board board;
     protected ParticipantsData participantsData;
 

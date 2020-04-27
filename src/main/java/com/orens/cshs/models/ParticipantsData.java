@@ -20,6 +20,9 @@ public class ParticipantsData {
         return simulationParticipants.add(element);
     }
 
+    public boolean removeSimulationParticipant(IInvocable element){
+        return simulationParticipants.remove(element);
+    }
 
     public void doIteration(long scheduledExecutionTime) {
         // pass on all of the data collection and do one iteration
