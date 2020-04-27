@@ -1,6 +1,6 @@
 package com.orens.cshs.infra.utils;
 
-import com.orens.cshs.models.pojos.Direction;
+import com.orens.cshs.models.Direction;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Random;
 
 public class RandomGenerator {
+
 
     private static final Random random = new Random();
     private static final int WIDTH = PropertiesFileReader.getBoardWidth();

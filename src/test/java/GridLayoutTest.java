@@ -1,4 +1,4 @@
-import com.orens.cshs.models.pojos.Pixel;
+import com.orens.cshs.models.Pixel;
 
 import javax.swing.*;
 import java.awt.*;

@@ -4,13 +4,13 @@ import com.orens.cshs.infra.logger.IReports;
 import com.orens.cshs.infra.logger.LoggerHandler;
 import com.orens.cshs.infra.logger.ReportLevel;
 import com.orens.cshs.models.Board;
-import com.orens.cshs.models.pojos.Pixel;
+import com.orens.cshs.models.Pixel;
 
-public class ConsoleDisplay extends AbstractDisplay {
+public class ConsoleOutput extends AbstractOutput {
 
     private IReports logger;
 
-    public ConsoleDisplay(Board board) {
+    public ConsoleOutput(Board board) {
         super(board);
     }
 

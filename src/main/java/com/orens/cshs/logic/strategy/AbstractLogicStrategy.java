@@ -2,29 +2,19 @@ package com.orens.cshs.logic.strategy;
 
 import com.orens.cshs.infra.utils.PropertiesFileReader;
 import com.orens.cshs.infra.utils.RandomGenerator;
-import com.orens.cshs.models.Board;
-import com.orens.cshs.models.Participant;
-import com.orens.cshs.models.ParticipantsData;
-import com.orens.cshs.models.pojos.Direction;
-import com.orens.cshs.models.pojos.Location;
+import com.orens.cshs.models.*;
 
 public abstract class AbstractLogicStrategy {
 
-    protected static final long CONTAGIOUS_TIME            = PropertiesFileReader.getContagiousTimeInMilliseconds();
-    protected static final int  CONTAGIOUS_RADIUS          = PropertiesFileReader.getContagiousRadius();
+    protected static final long CONTAGIOUS_TIME   = PropertiesFileReader.getContagiousTimeInMilliseconds();
+    protected static final int  CONTAGIOUS_RADIUS = PropertiesFileReader.getContagiousRadius();
 
     protected Board board;
     protected ParticipantsData participantsData;
 
-    public AbstractLogicStrategy(Board board, ParticipantsData participantsData) {
-        this.board = board;
+    public AbstractLogicStrategy(ParticipantsData participantsData) {
         this.participantsData = participantsData;
-    }
-
-    public abstract void executeLogic(Participant participant);
-
-    public void initializeBoardWithParticipant(Participant participant){
-        boolean isAdded = board.addParticipantToLocation(participant);
+        this.board = participantsData.getBoard();
     }
 
     public Location getNextRandomLocation(Location location) {
@@ -78,5 +68,8 @@ public abstract class AbstractLogicStrategy {
         }
         return new Location(Y, X);
     }
+
+    public abstract void executeLogic(NormalPerson normalPerson);
+    public abstract void executeLogic(InspectorPerson inspectorPerson);
 
 }
