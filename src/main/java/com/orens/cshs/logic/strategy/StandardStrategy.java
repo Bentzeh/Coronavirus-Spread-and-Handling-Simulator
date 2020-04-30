@@ -1,5 +1,7 @@
 package com.orens.cshs.logic.strategy;
 
+import com.orens.cshs.infra.logger.LoggerHandler;
+import com.orens.cshs.infra.logger.ReportLevel;
 import com.orens.cshs.infra.utils.RandomGenerator;
 import com.orens.cshs.logic.observer.IInvocable;
 import com.orens.cshs.logic.state.AbstractHealthState;
@@ -10,15 +12,23 @@ import com.orens.cshs.models.*;
 
 import java.util.Iterator;
 
+/**
+ * an implementation of the abstract strategy
+ */
 public class StandardStrategy extends AbstractLogicStrategy {
 
     public StandardStrategy(ParticipantsData participantsData) {
         super(participantsData);
+        LoggerHandler.getInstance().log(ReportLevel.TRACE,"entered StandardStrategy.Constructor()");
     }
 
-
+    /**
+     * the logic that a normalPerson should activate on each iteration
+     * @param normalPerson the participant that should activate this method logic
+     */
     @Override
     public void executeLogic(NormalPerson normalPerson) {
+        LoggerHandler.getInstance().log(ReportLevel.TRACE,"entered StandardStrategy.executeLogic(normalPerson)");
 
         AbstractHealthState normalPersonState = normalPerson.getCurrentHealthState();
 
@@ -28,6 +38,7 @@ public class StandardStrategy extends AbstractLogicStrategy {
 
             if (sickState.isIsolated()){
                 if (sickState.isIsolationTimeOver()){
+                    LoggerHandler.getInstance().log(ReportLevel.DEBUG,""+normalPerson.getId() + "  changed state to |Healthy|");
                     normalPerson.setCurrentHealthState(AbstractHealthState.State.Healthy);
                 }
                 // else in Isolation: does nothing
@@ -37,7 +48,8 @@ public class StandardStrategy extends AbstractLogicStrategy {
                 step(normalPerson);
 
                 if (isChangeState(normalPerson)){
-                    participantsData.removeSimulationParticipant(normalPerson);//dead
+                    LoggerHandler.getInstance().log(ReportLevel.DEBUG,""+normalPerson.getId() + "  changed state to |Dead|");
+                    participantsData.removeSimulationParticipant(normalPerson);//Dead
                 }
             }
         }
@@ -46,6 +58,7 @@ public class StandardStrategy extends AbstractLogicStrategy {
             step(normalPerson);
 
             if (isChangeState(normalPerson)){
+                LoggerHandler.getInstance().log(ReportLevel.DEBUG,""+normalPerson.getId() + "  changed state to |Sick|");
                 normalPerson.setCurrentHealthState(AbstractHealthState.State.Sick);
             }
         }
@@ -68,6 +81,7 @@ public class StandardStrategy extends AbstractLogicStrategy {
                 boolean isOtherSick = otherParticipant.getCurrentHealthState().isSick();
 
                 if  (isOtherSick && inRange && timeOverlap && RandomGenerator.trueWith80PercentProbability()){
+                    LoggerHandler.getInstance().log(ReportLevel.DEBUG,""+normalPerson.getId() + "  changed state to |Carrying|");
                     normalPerson.setCurrentHealthState(AbstractHealthState.State.Carrying);
                     isFinish = true;
                 }
@@ -75,16 +89,22 @@ public class StandardStrategy extends AbstractLogicStrategy {
         }
     }
 
+    /**
+     * the logic that a inspectorPerson should activate on each iteration
+     * @param inspectorPerson the participant that should activate this method logic
+     */
     @Override
     public void executeLogic(InspectorPerson inspectorPerson) {
+        LoggerHandler.getInstance().log(ReportLevel.TRACE,"entered StandardStrategy.executeLogic(inspectorPerson)");
 
-        AbstractHealthState normalPersonState = inspectorPerson.getCurrentHealthState();
+        AbstractHealthState inspectorPersonState = inspectorPerson.getCurrentHealthState();
 
 
-        if (normalPersonState.isSick()){
-            SickState sickState = (SickState) normalPersonState;
+        if (inspectorPersonState.isSick()){
+            SickState sickState = (SickState) inspectorPersonState;
             if (sickState.isIsolated()){
                 if (sickState.isIsolationTimeOver()){
+                    LoggerHandler.getInstance().log(ReportLevel.DEBUG,""+inspectorPerson.getId() + "  changed state to |Healthy|");
                     inspectorPerson.setCurrentHealthState(AbstractHealthState.State.Healthy);
                 }
                 // else in Isolation: does nothing
@@ -94,20 +114,21 @@ public class StandardStrategy extends AbstractLogicStrategy {
                 step(inspectorPerson);
 
                 if (isChangeState(inspectorPerson)){
-                    participantsData.removeSimulationParticipant(inspectorPerson);//dead
+                    LoggerHandler.getInstance().log(ReportLevel.DEBUG,""+inspectorPerson.getId() + "  changed state to |Dead|");
+                    participantsData.removeSimulationParticipant(inspectorPerson);//Dead
                 }
             }
         }
-        else if (normalPersonState.isCarrying()){
-            CarryingState carryingState = (CarryingState) normalPersonState;
+        else if (inspectorPersonState.isCarrying()){
+            CarryingState carryingState = (CarryingState) inspectorPersonState;
 
             step(inspectorPerson);
             if (isChangeState(inspectorPerson)){
                 inspectorPerson.setCurrentHealthState(AbstractHealthState.State.Sick);
             }
         }
-        else{ // if (normalPersonState.isHealthy()){
-            HealthyState healthyState = (HealthyState) normalPersonState;
+        else{ // if (inspectorPersonState.isHealthy()){
+            HealthyState healthyState = (HealthyState) inspectorPersonState;
 
             step(inspectorPerson);
 
@@ -119,13 +140,17 @@ public class StandardStrategy extends AbstractLogicStrategy {
 
                 AbstractHealthState otherParticipantState = otherParticipant.getCurrentHealthState();
                 int amountOfPeopleMet = inspectorPerson.getAmountOfPeopleMet();
-                if (otherParticipantState.isSick()){
+
+                boolean inRange = Location.isWithinRadius(inspectorPerson.getLocation(), otherParticipant.getLocation(), CONTAGIOUS_RADIUS);
+                if (inRange && otherParticipantState.isSick() && !((SickState)otherParticipantState).isIsolated()){
+                    LoggerHandler.getInstance().log(ReportLevel.DEBUG,""+inspectorPerson.getId() + "  is treating " + otherParticipant.getId());
                     SickState sickState = (SickState) otherParticipantState;
                     sickState.setIsolation();
                     inspectorPerson.setAmountOfPeopleMet(amountOfPeopleMet+1);
                 }
                 if (inspectorPerson.isMetToMuchPeople()){
                     inspectorPerson.setAmountOfPeopleMet(0);
+                    LoggerHandler.getInstance().log(ReportLevel.DEBUG,""+inspectorPerson.getId() + "  changed state to |Carrying|");
                     inspectorPerson.setCurrentHealthState(AbstractHealthState.State.Carrying);
                     isFinish = true;
                 }
@@ -133,13 +158,25 @@ public class StandardStrategy extends AbstractLogicStrategy {
         }
     }
 
-
+    /**
+     * move a participant from one location to another
+     * @param participant the participant that we want to move
+     */
     private void step(Participant participant){
+        LoggerHandler.getInstance().log(ReportLevel.TRACE,"entered StandardStrategy.step()");
+
         Location newLocation = getNextRandomLocation(participant.getLocation());
         participantsData.moveParticipantToNewLocation(participant, newLocation);
     }
 
+    /**
+     * checks if the participant state should be changed
+     * @param participant the participant that we want to check
+     * @return true if should be changed, false otherwise
+     */
     private boolean isChangeState(Participant participant){
+        LoggerHandler.getInstance().log(ReportLevel.TRACE,"entered StandardStrategy.isChangeState()");
+
         TimeFrame timeFrame = participant.getCurrentHealthState().getTimeFrameOfStateChangedTillNow();
         long period = timeFrame.getPeriodInSeconds();
 

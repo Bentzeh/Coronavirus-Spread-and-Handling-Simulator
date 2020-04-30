@@ -1,5 +1,8 @@
 package com.orens.cshs.models;
 
+/**
+ * enum for a representation of seconds (for better readability)
+ */
 public enum Seconds {
     One(1),
     Two(2),

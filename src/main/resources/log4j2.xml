@@ -8,7 +8,7 @@
     <Appenders>
 
         <Console name="ConsoleAppender" target="SYSTEM_OUT">
-            <PatternLayout  pattern="${pattern}"/>
+            <PatternLayout  pattern="${pattern}" disableAnsi="false"/>
         </Console>
 
         <!--<ReportPortalLog4j2Appender name="ReportPortalAppender">
@@ -18,8 +18,10 @@
     </Appenders>
 
     <Loggers>
-        <Root level="ALL">
-            <!--        <Root level="INFO">-->
+<!--        <Root level="OFF">-->
+<!--        <Root level="ALL">-->
+<!--        <Root level="TRACE">-->
+        <Root level="INFO">
             <AppenderRef ref="ConsoleAppender"/>
 <!--            <AppenderRef ref="ReportPortalAppender"/>-->
         </Root>

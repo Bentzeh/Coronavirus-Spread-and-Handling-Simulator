@@ -1,5 +1,7 @@
 package com.orens.cshs.display;
 
+import com.orens.cshs.infra.logger.LoggerHandler;
+import com.orens.cshs.infra.logger.ReportLevel;
 import com.orens.cshs.infra.utils.PropertiesFileReader;
 import com.orens.cshs.models.Board;
 import com.orens.cshs.models.Pixel;
@@ -9,18 +11,32 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-
+/**
+* this class implements the abstract class for output the simulation data
+*/
 public class GridLayoutOutput extends AbstractOutput {
 
     private JFrame frame;
     private JPanel[][] displayMat;
 
+
+    /**
+     *  constructor
+     * @param board the board that the output mechanism reads and output
+     */
     public GridLayoutOutput(Board board) {
         super(board);
+        LoggerHandler.getInstance().log(ReportLevel.TRACE,"entered GridLayoutOutput.Constructor()");
     }
 
+
+    /**
+     * implementation of the abstract class method that initialize the internal object of this class
+     */
     @Override
     public void InitializeDisplay() {
+        LoggerHandler.getInstance().log(ReportLevel.TRACE,"entered GridLayoutOutput.InitializeDisplay()");
+
         frame = new JFrame("Coronavirus Spread and Handling Simulator");
 
         frame.setPreferredSize(new Dimension(PropertiesFileReader.getFrameWidth(), PropertiesFileReader.getFrameHeight()));
@@ -113,8 +129,13 @@ public class GridLayoutOutput extends AbstractOutput {
         frame.setVisible(true);
     }
 
+
+    /**
+     * implementation of the abstract class method that updates the internal object of this class
+     */
     @Override
     public void updateDisplayView() {
+        //LoggerHandler.getInstance().log(ReportLevel.TRACE,"entered GridLayoutOutput.updateDisplayView()");
         Pixel[][] BoardField = board.getField();
 
         for (int i = 0; i < displayMat.length; ++i) {
